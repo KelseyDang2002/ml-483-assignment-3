@@ -3,7 +3,9 @@ import pandas as pd
 
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score, precision_score, confusion_matrix, classification_report
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.neighbors import KNeighborsClassifier
 
 TEST_DATA_PERCENTAGE = 0.2
 DATASET_FRACTION = 0.25
@@ -44,38 +46,61 @@ def main():
     random_forest_classifier(X_train, y_train, X_test, y_test)
 
     # call KNN classifier
-    # knn_classifier(X_train, y_train, X_test, y_test)
+    knn_classifier(X_train, y_train, X_test, y_test)
 
 '''Random Forest Decision Tree Classifier'''
 def random_forest_classifier(X_train, y_train, X_test, y_test):
     # Random Forest model
-    # rf = RandomForestClassifier()
+    rf = RandomForestClassifier(random_state=0)
 
     # Random Forest model with hyperparameters
-    rf = RandomForestClassifier(
-        n_estimators=100,           # number of trees
-        max_depth=10,               # maximum depth of trees
-        min_samples_split=10,        # minimum samples to split a node
-        criterion='entropy',        # criterion for split quality
-        n_jobs=1,                   # use all available processors
-        random_state=0
-    )
+    # rf = RandomForestClassifier(
+    #     n_estimators=1000,          # number of trees
+    #     max_depth=10,               # maximum depth of trees
+    #     min_samples_split=10,       # minimum samples to split a node
+    #     criterion='entropy',        # criterion for split quality
+    #     n_jobs=1,                   # use all available processors
+    #     random_state=0
+    # )
 
     # train model
     print("\nTraining Random Forest Model...\n")
     rf.fit(X_train, y_train)
 
-    # predict
+    # prediction
     y_pred = rf.predict(X_test)
 
-    # prediction results
+    # performance results
+    print("\nRandom Forest Performance Results:")
     print(f"Accuracy: {accuracy_score(y_test, y_pred) * 100}%\n")
     print(f"\nClassification Report:\n{classification_report(y_test, y_pred)}\n")
+
+'''Preprocess data'''
+def preprocess(X_train, X_test):
+    scaler = MinMaxScaler(feature_range=(0,1))
+    X_train_scaled = scaler.fit_transform(X_train)
+    X_test_scaled = scaler.fit_transform(X_test)
+    return X_train_scaled, X_test_scaled
 
 '''K-Nearest Neigbor Classifier'''
 def knn_classifier(X_train, y_train, X_test, y_test):
     # KNN model
-    print()
+    knn = KNeighborsClassifier(n_neighbors=10)
+
+    # preprocess data
+    X_train_scaled, X_test_scaled = preprocess(X_train, X_test)
+
+    # train model
+    print("\nTraining KNN Model...")
+    knn.fit(X_train_scaled, y_train)
+
+    # prediction
+    y_pred = knn.predict(X_test_scaled)
+
+    # performance results
+    print("\nK-Nearest Neighbor Performance Results:")
+    print(f"Accuracy: {accuracy_score(y_test, y_pred) * 100}%\n")
+    print(f"\nClassification Report:\n{classification_report(y_test, y_pred)}\n")
 
 '''Call main'''
 if __name__ == "__main__":
