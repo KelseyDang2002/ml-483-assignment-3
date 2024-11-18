@@ -8,6 +8,7 @@ from sklearn.neighbors import KNeighborsClassifier
 
 TEST_DATA_PERCENTAGE = 0.2
 DATASET_FRACTION = 0.25
+NUMBER_OF_NEIGHBORS = 10
 
 '''Main'''
 def main():
@@ -84,7 +85,7 @@ def preprocess(X_train, X_test):
 '''K-Nearest Neigbor Classifier'''
 def knn_classifier(X_train, y_train, X_test, y_test):
     # KNN model
-    knn = KNeighborsClassifier(n_neighbors=10)
+    knn = KNeighborsClassifier(n_neighbors=NUMBER_OF_NEIGHBORS)
 
     # preprocess data
     X_train_scaled, X_test_scaled = preprocess(X_train, X_test)
