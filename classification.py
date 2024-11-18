@@ -99,6 +99,7 @@ def knn_classifier(X_train, y_train, X_test, y_test):
 
     # performance results
     print("\nK-Nearest Neighbor Performance Results:")
+    print(f"Number of neighbors: {NUMBER_OF_NEIGHBORS}")
     print(f"Accuracy: {accuracy_score(y_test, y_pred) * 100}%\n")
     print(f"\nClassification Report:\n{classification_report(y_test, y_pred)}\n")
 
