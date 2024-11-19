@@ -7,7 +7,6 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.neighbors import KNeighborsClassifier
 
 TEST_DATA_PERCENTAGE = 0.2
-DATASET_FRACTION = 0.25
 NUMBER_OF_NEIGHBORS = 10
 
 '''Main'''
@@ -21,15 +20,6 @@ def main():
     # drop address column
     if 'address' in df.columns:
         df.drop(columns=['address'], inplace=True)
-
-    # downsample dataset
-    print("Downsampling the dataset...\n")
-    df = df.sample(frac=DATASET_FRACTION, random_state=0)
-    
-    # encode categorical variables
-    # print("Encoding categorical values...\n")
-    # categorical_cols = ['address', 'label'] # replace with actual categorical columns
-    # df = pd.get_dummies(df, columns=categorical_cols, drop_first=True)
 
     # get features
     x = df.drop(columns=['label'])

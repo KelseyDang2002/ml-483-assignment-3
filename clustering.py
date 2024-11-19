@@ -4,11 +4,10 @@ import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
 from sklearn.mixture import GaussianMixture
-from sklearn.metrics import mean_squared_error, adjusted_rand_score
+from sklearn.metrics import mean_squared_error, adjusted_rand_score, silhouette_score
 
-TEST_DATA_PERCENTAGE = 0.2
-DATASET_FRACTION = 1
-NUMBER_OF_CLUSTERS = 2 # 2 clusters give the best MSE result
+NUMBER_OF_CLUSTERS = 18
+NUMBER_OF_COMPONENTS = 3
 
 '''Main'''
 def main():
@@ -21,10 +20,6 @@ def main():
     # drop address column
     if 'address' in df.columns:
         df.drop(columns=['address'], inplace=True)
-
-    # downsample dataset
-    # print("Downsampling the dataset...\n")
-    # df = df.sample(frac=DATASET_FRACTION, random_state=0)
 
     # get features
     x = df.drop(columns=['label'])
@@ -39,7 +34,7 @@ def main():
     x_scaled = scaler.fit_transform(x)
 
     # find optimal number of clusters
-    # find_optimal_k(x_scaled)
+    find_optimal_k(x_scaled)
 
     # call K-means clustering
     k_means_clustering(x_scaled, y)
@@ -67,16 +62,12 @@ def find_optimal_k(x_scaled):
 
 '''K-means Clustering Model'''
 def k_means_clustering(x_scaled, y):
-    # K-means model
-    kmeans = KMeans(n_clusters=NUMBER_OF_CLUSTERS, random_state=0)
-
     # K-means model with hyperparameters
-    # kmeans = KMeans(
-    #     n_clusters=NUMBER_OF_CLUSTERS,
-    #     init='k-means++',
-    #     max_iter=1000,
-    #     random_state=0
-    # )
+    kmeans = KMeans(
+        n_clusters=NUMBER_OF_CLUSTERS,
+        max_iter=1000,
+        random_state=0
+    )
 
     # train model
     print("\nClustering with K-means Model...")
@@ -97,7 +88,7 @@ def k_means_clustering(x_scaled, y):
 '''Expectation-Maximization (EM) Clustering Model'''
 def em_clustering(x_scaled, y):
     # EM model
-    em = GaussianMixture(n_components=NUMBER_OF_CLUSTERS, random_state=0)
+    em = GaussianMixture(n_components=NUMBER_OF_COMPONENTS, random_state=0)
 
     # train model
     print("\nClustering with EM (Gaussian Mixture) Model...")
@@ -113,7 +104,7 @@ def em_clustering(x_scaled, y):
     mse = mean_squared_error(x_scaled, predicted_centroids)
     ari = adjusted_rand_score(y, predicted_labels)
     print("\nEM (Gaussian Mixture) Performance Results:")
-    print(f"Number of clusters: {NUMBER_OF_CLUSTERS}")
+    print(f"Number of componentss: {NUMBER_OF_COMPONENTS}")
     print(f"Mean Squared Error (internal index): {mse}")
     print(f"Absolute Rand Index (external index): {ari}\n")
 
